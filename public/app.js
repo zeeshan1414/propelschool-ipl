@@ -4,6 +4,22 @@ function fetchAndVisualizeData() {
     .then(visualizeData);
 }
 
+async function myFunc() {
+  const year = parseInt(document.getElementById('year').value);
+
+  if(year<2008 || year>2019) {
+    document.querySelector(".input-container > .error").classList.value="error";
+  } else {
+    document.querySelector(".input-container > .error").classList="error invisible";
+  }
+  try {
+    const result = await (await fetch(`https://arcane-wildwood-32573.herokuapp.com/economy?year=${year}`)).json();
+    visualizeTopBowlerContainer(result, year);
+  } catch(err) {
+    console.log("No such result")
+  }
+}
+
 fetchAndVisualizeData();
 
 function visualizeData(data) {
@@ -34,12 +50,12 @@ function visualizeStadium(venue) {
         teams[team].push(obj[team])
       }
     }
-    
+
   }
   for(let name in teams) {
     seriesData.push({ name, data: teams[name] })
   }
-  
+
   Highcharts.chart('venue', {
     chart: {
         type: 'bar'
@@ -280,4 +296,62 @@ function visualizeMatchesPlayedPerYear(matchesPlayedPerYear) {
       }
     ]
   });
+}
+
+function visualizeTopBowlerContainer(topEconomicalBowlers, year) {
+  const seriesData = [];
+
+  for(let item of topEconomicalBowlers) {
+    seriesData.push([item.bowler, parseFloat(item.economy)]);
+  }
+
+  Highcharts.chart('topBowlerContainer', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: `4. Top Economical Bowlers in ${year} season:`
+    },
+    subtitle: {
+        text: 'Source: <a href="http://iplt20.com">ipl.com</a>'
+    },
+    xAxis: {
+        type: 'category',
+        labels: {
+            rotation: -45,
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Economy'
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    tooltip: {
+        pointFormat: 'Economy: <b>{point.y:.2f}</b>'
+    },
+    series: [{
+        name: 'Population',
+        data: seriesData,
+        dataLabels: {
+            enabled: true,
+            rotation: -90,
+            color: '#FFFFFF',
+            align: 'right',
+            format: '{point.y:.2f}', // one decimal
+            y: 10, // 10 pixels down from the top
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Verdana, sans-serif'
+            }
+        }
+    }]
+});
 }

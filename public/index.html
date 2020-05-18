@@ -14,6 +14,13 @@
 
 <body>
     <h1>IPL Dataset visualization</h1>
+    <div class="input-container">
+        <span class="label">Enter year: </span>
+        <input type="number" min="2008" max="2019" class="year-input" id="year">
+        <button class="year-input-button" onclick="myFunc()">Submit</button>
+        <span class="error invisible">Error: Enter year from 2008 to 2019</span>
+    </div>
+    <div id="topBowlerContainer" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="matches-played-per-year" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="matches-won-by-each-team" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="extraRuns" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
